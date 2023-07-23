@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+
+import gzip
+
+
+def get_exp_vector(geneName, tissue, gtexExpDir):
+    '''
+    Output a vector of expression levels for a given gene and tissue 
+
+    Note:  Warning, the order of this expression vector may not be the same as the genotype vector.
+    '''
+
+    filePath = gtexExpDir + "/" + tissue + ".v7.normalized_expression.bed.gz"
+    fileIN = gzip.open(filePath)
+    counter = 0
+    matchingLine = ""
+    header = fileIN.readline().decode().rstrip().split('\t')
+    individualNames = header[4:]
+    for i in fileIN:
+        i =i.decode().rstrip().split("\t")
+        if i[3]==geneName:
+            matchingLine = i
+            break
+    fileIN.close()
+    expVector = matchingLine[4:]
+    return expVector, individualNames
